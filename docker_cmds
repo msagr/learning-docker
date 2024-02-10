@@ -1,0 +1,75 @@
+DOCKER notes :-
+
+1. images - These are like CD/DVDs using which we can create our own sandbox.
+2. containers - These are sandboxed env. (like a standalone computer) built using images.
+
+check version - docker --version
+To grab an image - docker pull image_name
+
+default - pulls latest image.
+
+Docker images is composed of multiple layers. (components that allow the s/w to run)
+
+NOTE :- We don't need to login to download public images, but for private images we have to login to hub.docker.com
+
+To list image - docker image ls
+To list container - docker ps
+
+To run container - docker run
+
+--name -> alias
+-e -> env. variable
+-d -> detach mode
+-p -> To specify the port that can interact with image.
+--net -> network
+
+To stop container - docker stop name/container_id
+
+Docker run runs two commands -> first it pulls the image if not present locally and then builds a container.
+
+Default port -> 5432
+
+If we run two services on same port they are going to conflict.
+
+To get list of all containers whether running or inactive -> docker container ls -a.
+
+Docker is lightweight while VM is very heavy, its running an OS on top of OS.
+Docker doesn't include kernel like VMs and its just like an application running on system. (uses just a bare minimum of OS layer).
+
+Docker interacts and executes commands in host API and then moves things to client. 
+
+Docker is fast.
+
+To remove all stopped containers - docker container prune
+
+To display all volumes - docker volume ls (stores data of database in volumes).
+
+To run mongo in specified port ->
+
+docker run --name my-mongodb -p 4000:<default port [google out]> mongo
+
+To see logs of a container -> docker logs my-mongodb
+
+for mongodb to interact with mongo-express both needs to be on same network otherwise it won't work.
+
+To create network in docker -> docker network create <network_name>
+
+To list all networks -> docker network ls
+
+creating container for mongo ->
+
+docker run -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=root --name mongodb --net mongo-network -d mongo 
+
+connect mongodb to mongo-express in same network ->
+	
+	docker run -d -p 8081:8081 -e ME_CONFIG_MONGODB_ADMINUSERNAME=root -e ME_CONFIG_MONGODB_ADMINPASSWORD=root -e ME_CONFIG_MONGODB_SERVER=mongodb --net mongo-network --name mongo-express mongo-express
+
+basic oauth credentials when working with mongo-express -> admin:pass
+
+One of problems is data doesn't persist in docker, it just gets away with container.
+
+To compose down the container -> docker-compose down
+
+Note :- There are many options for image registry like AWS/Docker etc.
+
+

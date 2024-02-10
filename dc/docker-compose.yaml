@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongo
+    ports: 
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    volumes:
+      - mymongo-data:/data/db # default path for mongodb, its different for different dbs. (here, trying to store data in volumes)
+  mongo-express:
+    image: mongo-express
+    restart: always # keeps on restarting until it finds a connection or terminates on its own.
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=root
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+
+volumes:
+  mymongo-data:
+    driver: local
+
+# NOTE - docker-compose file automatically creates a new network and
+# puts all of containers in it.  
+
+# Here, in application we want mongodb to come first and then the mongo-express server. 
+# Ensuring that through a restart flag
+
+# After specifying volumes and path to it now data will be there even if the container stops. (data persistence)
